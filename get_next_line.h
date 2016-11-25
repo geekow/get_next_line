@@ -6,19 +6,27 @@
 /*   By: jjacobi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/24 20:46:19 by jjacobi           #+#    #+#             */
-/*   Updated: 2016/11/24 21:23:46 by jjacobi          ###   ########.fr       */
+/*   Updated: 2016/11/25 17:07:25 by jjacobi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
 
+# include <stdlib.h>
+# include <unistd.h>
+# include <sys/uio.h>
+# include <sys/types.h>
+
 # define BUFF_SIZE 32
 
-typedef struct		s_data
+typedef	struct	s_data
 {
-	size_t			index;
-	int				fd;
-}					t_data;
+	int			fd;
+	size_t		index;
+	void		*result;
+}				t_data;
+
+int	get_next_line(const int fd, char **line);
 
 #endif
