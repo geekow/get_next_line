@@ -23,8 +23,8 @@
 typedef	struct	s_data
 {
 	int			fd;
-	size_t		index;
-	void		*result;
+	char		*content;
+	char		end;
 }				t_data;
 
 int	get_next_line(const int fd, char **line);
