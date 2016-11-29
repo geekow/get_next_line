@@ -6,28 +6,32 @@
 /*   By: jjacobi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/24 19:35:13 by jjacobi           #+#    #+#             */
-/*   Updated: 2016/11/29 19:19:17 by jjacobi          ###   ########.fr       */
+/*   Updated: 2016/11/29 19:44:38 by jjacobi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 #include "libft.h"
-/**
-static int	linelen(char *str)
-{
-	size_t	i;
 
-	i = 0;
-	while (str[i])
+static void	ft_lstremovecontent(t_list **list, void *content)
+{
+	t_list	*cache;
+	t_list	*tmp;
+
+	cache = *list->next;
+	if (*list->content == content)
 	{
-		if (str[i] == '\n')
-			return (i);
-		i++;
+		free(list);
+		*list = cache;
 	}
-	if (!str[i])
-		return (i);
-	return (-1);
-}**/
+	while (cache)
+	{
+
+		cache = cache->next;
+	}
+		
+	cache = *list;
+}
 
 static int	parse(t_list *list, t_data *data, char **line)
 {
