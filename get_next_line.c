@@ -11,41 +11,65 @@
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include "libft.h"
+#include "libft/includes/libft.h"
 
-static void	ft_lstremovecontent(t_list **list, void *content)
+static void	ft_lstremovecontent(t_list **listadd, void *content)
 {
 	t_list	*cache;
 	t_list	*tmp;
+	t_list	*list;
 
-	cache = *list->next;
-	if (*list->content == content)
+	list = *listadd;
+	cache = list->next;
+	while (list->content == content)
 	{
 		free(list);
-		*list = cache;
+		list = cache;
+		cache = list->next;
 	}
+	tmp = list;
 	while (cache)
 	{
-
+		if (cache->content == content)
+		{
+			tmp->next = cache->next;
+			free(cache);
+			cache = tmp->next;
+		}	
+		tmp = cache;
 		cache = cache->next;
 	}
-		
-	cache = *list;
+	listadd = &list;
+	ft_putstr("---DEBUG---\n");
+	t_data	*data;
+	while (list)
+	{
+		data = (t_data*)list->content;
+		ft_putstr("fd : ");
+		ft_putnbr(data->fd);
+		ft_putendl("");
+		list = list->next;
+	}
 }
 
 static int	parse(t_list *list, t_data *data, char **line)
 {
-	char	buf[BUFF_SIZE];
 	int		i;
 
 	i = 0;
-	while (!ft_strchr(data->content, '\n') && i)
-		i = save_a_read(fd, data->content);
+	while ((!data->content || !ft_strchr(data->content, '\n')) && i)
+	{
+		i = 0;
+		//i = save_a_read(data->fd, data->content);
+	}
 	if (i == -1 || i == 0)
 	{
+		ft_putstr("congratulation, the data of the fd : ");
+		ft_putnbr(data->fd);
+		ft_putendl(" is now deleted.");
 		*line = data->content;
 		free(data->content);
-		/** FREE LIST ELEM CODE FT_LSTREMOVECONTENT **/
+		ft_lstremovecontent(&list, (void*)data); //test if it work
 		return (i);
 	}
 	/** RETURN THE FIRST X CHARS TO THE /n **/
@@ -66,11 +90,14 @@ int			get_next_line(const int fd, char **line)
 			return (parse(list, data, line));
 		cache = cache->next;
 	}
-	if (!(data = malloc(sizeof(t_data))))
+	if (!(data = (t_data*)malloc(sizeof(t_data))))
 		return (-1);
 	data->fd = fd;
 	data->content = NULL;
 	cache = ft_lstnew((void*)data, sizeof(data));
 	ft_lstadd(&list, cache);
+	ft_putstr("We just created a t_list elemn for the fd : ");
+	ft_putnbr(data->fd);
+	ft_putendl("");
 	return (parse(list, data, line));
 }
