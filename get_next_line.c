@@ -11,69 +11,80 @@
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include "libft/includes/libft.h"
+#include "libft.h"
 
-static void	ft_lstremovecontent(t_list **listadd, void *content)
+static void	ft_lstremovecontent(t_list **list, int fd)
 {
-	t_list	*cache;
-	t_list	*tmp;
-	t_list	*list;
+  t_list	*current;
+  t_list	*previous;
+  t_data	*data;
 
-	list = *listadd;
-	cache = list->next;
-	while (list->content == content)
-	{
-		free(list);
-		list = cache;
-		cache = list->next;
-	}
-	tmp = list;
-	while (cache)
-	{
-		if (cache->content == content)
-		{
-			tmp->next = cache->next;
-			free(cache);
-			cache = tmp->next;
-		}	
-		tmp = cache;
-		cache = cache->next;
-	}
-	listadd = &list;
-	ft_putstr("---DEBUG---\n");
-	t_data	*data;
-	while (list)
-	{
-		data = (t_data*)list->content;
-		ft_putstr("fd : ");
-		ft_putnbr(data->fd);
-		ft_putendl("");
-		list = list->next;
-	}
+  previous	= NULL;
+  current	= *list;
+  while (current != NULL)
+  {
+	  data = (t_data*)current->content;
+	  if (data->fd == fd)
+	  {
+		  if (previous == NULL)
+			  *list = current->next;
+		  else
+			  previous->next = current->next;
+		free(data->content);
+		free(data);
+		free(current);
+		return;
+	  }
+	  previous	= current;
+	  current	= current->next;
+  	}
 }
 
-static int	parse(t_list *list, t_data *data, char **line)
+static int	extend_content(t_data *data)
 {
 	int		i;
+	char	*str;
 
 	i = 0;
-	while ((!data->content || !ft_strchr(data->content, '\n')) && i)
+	str = ft_strnew(BUFF_SIZE + 1);
+	if ((i = read(data->fd, str, BUFF_SIZE)) == -1)
+		return (-1);
+	str[i] = '\0';
+	if (data->content)
+		data->content = ft_strjoin(data->content, str);
+	else
+		data->content = ft_strdup(str);
+	free(str);
+	if (!i && !ft_strchr(data->content, '\n'))
+			return (0);
+	else
+		return (1);
+}
+
+static int	parse(t_list **list, t_data *data, char **line)
+{
+	char	*str;
+	int		i;
+
+	while (1)
 	{
-		i = 0;
-		//i = save_a_read(data->fd, data->content);
+		if (data->content && (str = ft_strchr(data->content, '\n')))
+		{
+			*str = '\0';
+			*line = ft_strdup(data->content);
+			ft_memmove(data->content, str + 1, ft_strlen(str + 1) + 1);
+			return (1);
+		}
+		if ((i = extend_content(data)) == -1)
+			return (-1);
+		else if (i == 0)
+		{
+			*line = ft_strdup(data->content);
+			ft_lstremovecontent(list, data->fd);
+			return (0);
+		}
 	}
-	if (i == -1 || i == 0)
-	{
-		ft_putstr("congratulation, the data of the fd : ");
-		ft_putnbr(data->fd);
-		ft_putendl(" is now deleted.");
-		*line = data->content;
-		free(data->content);
-		ft_lstremovecontent(&list, (void*)data); //test if it work
-		return (i);
-	}
-	/** RETURN THE FIRST X CHARS TO THE /n **/
-	return (0);
+	return (-1);
 }
 
 int			get_next_line(const int fd, char **line)
@@ -87,17 +98,16 @@ int			get_next_line(const int fd, char **line)
 	{
 		data = (t_data*)cache->content;
 		if (data->fd == fd)
-			return (parse(list, data, line));
+			return (parse(&list, data, line));
 		cache = cache->next;
 	}
 	if (!(data = (t_data*)malloc(sizeof(t_data))))
 		return (-1);
 	data->fd = fd;
-	data->content = NULL;
 	cache = ft_lstnew((void*)data, sizeof(data));
-	ft_lstadd(&list, cache);
-	ft_putstr("We just created a t_list elemn for the fd : ");
-	ft_putnbr(data->fd);
-	ft_putendl("");
-	return (parse(list, data, line));
+	if (list)
+		ft_lstadd(&list, cache);
+	else
+		list = cache;
+	return (get_next_line(fd, line));
 }
