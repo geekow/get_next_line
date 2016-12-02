@@ -109,6 +109,7 @@ int			get_next_line(const int fd, char **line)
 	data->fd = fd;
 	data->content = NULL;
 	cache = ft_lstnew((void*)data, sizeof(t_data));
+	free(data);
 	if (list)
 		ft_lstadd(&list, cache);
 	else
