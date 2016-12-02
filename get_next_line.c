@@ -15,35 +15,36 @@
 
 static void	ft_lstremovecontent(t_list **list, int fd)
 {
-  t_list	*current;
-  t_list	*previous;
-  t_data	*data;
+	t_list	*current;
+	t_list	*previous;
+	t_data	*data;
 
-  previous	= NULL;
-  current	= *list;
-  while (current != NULL)
-  {
-	  data = (t_data*)current->content;
-	  if (data->fd == fd)
-	  {
-		  if (previous == NULL)
-			  *list = current->next;
-		  else
-			  previous->next = current->next;
-		free(data->content);
-		free(data);
-		free(current);
-		return;
-	  }
-	  previous	= current;
-	  current	= current->next;
-  	}
+	previous = NULL;
+	current = *list;
+	while (current != NULL)
+	{
+		data = (t_data*)current->content;
+		if (data->fd == fd)
+		{
+			if (previous == NULL)
+				*list = current->next;
+			else
+				previous->next = current->next;
+			free(data->content);
+			free(data);
+			free(current);
+			return;
+		}
+		previous = current;
+		current = current->next;
+	}
 }
 
 static int	extend_content(t_data *data)
 {
 	int		i;
 	char	*str;
+	char	*result;
 
 	i = 0;
 	str = ft_strnew(BUFF_SIZE + 1);
@@ -51,12 +52,14 @@ static int	extend_content(t_data *data)
 		return (-1);
 	str[i] = '\0';
 	if (data->content)
-		data->content = ft_strjoin(data->content, str);
+		result = ft_strjoin(data->content, str);
 	else
-		data->content = ft_strdup(str);
+		result = ft_strdup(str);
+	free(data->content);
 	free(str);
+	data->content = result;
 	if (!i && !ft_strchr(data->content, '\n'))
-			return (0);
+		return (0);
 	else
 		return (1);
 }
@@ -104,7 +107,8 @@ int			get_next_line(const int fd, char **line)
 	if (!(data = (t_data*)malloc(sizeof(t_data))))
 		return (-1);
 	data->fd = fd;
-	cache = ft_lstnew((void*)data, sizeof(data));
+	data->content = NULL;
+	cache = ft_lstnew((void*)data, sizeof(t_data));
 	if (list)
 		ft_lstadd(&list, cache);
 	else
