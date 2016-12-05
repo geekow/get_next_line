@@ -58,9 +58,7 @@ static int	extend_content(t_data *data)
 	free(data->content);
 	free(str);
 	data->content = result;
-	if (i == 0)
-		return (2);
-	else if (i < BUFF_SIZE && !ft_strchr(data->content, '\n'))
+	if (i < BUFF_SIZE && !ft_strchr(data->content, '\n'))
 		return (0);
 	else
 		return (1);
@@ -84,13 +82,11 @@ static int	parse(t_list **list, t_data *data, char **line)
 			return (-1);
 		else if (i == 0)
 		{
+			if (data->end)
+				ft_lstremovecontent(list, data->fd);
 			*line = ft_strdup(data->content);
+			data->end = 1;
 			return (1);
-		}
-		else if (i == 2)
-		{
-			ft_lstremovecontent(list, data->fd);
-			return (0);
 		}
 	}
 	return (-1);
@@ -114,6 +110,7 @@ int			get_next_line(const int fd, char **line)
 		return (-1);
 	data->fd = fd;
 	data->content = NULL;
+	data->end = 0;
 	cache = ft_lstnew((void*)data, sizeof(t_data));
 	free(data);
 	if (list)
