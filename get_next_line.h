@@ -6,7 +6,7 @@
 /*   By: jjacobi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/24 20:46:19 by jjacobi           #+#    #+#             */
-/*   Updated: 2016/12/05 16:53:11 by jjacobi          ###   ########.fr       */
+/*   Updated: 2016/12/05 17:16:29 by jjacobi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 # include <sys/uio.h>
 # include <sys/types.h>
 
-# define BUFF_SIZE 1
+# define BUFF_SIZE 42
 
 typedef	struct	s_data
 {
