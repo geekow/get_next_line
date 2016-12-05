@@ -6,7 +6,7 @@
 /*   By: jjacobi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/24 20:46:19 by jjacobi           #+#    #+#             */
-/*   Updated: 2016/11/25 17:07:25 by jjacobi          ###   ########.fr       */
+/*   Updated: 2016/12/05 16:53:11 by jjacobi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,6 @@ typedef	struct	s_data
 	char		end;
 }				t_data;
 
-int	get_next_line(const int fd, char **line);
+int				get_next_line(const int fd, char **line);
 
 #endif
