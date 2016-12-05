@@ -83,7 +83,10 @@ static int	parse(t_list **list, t_data *data, char **line)
 		else if (i == 0)
 		{
 			if (data->end)
+			{
 				ft_lstremovecontent(list, data->fd);
+				return (0);
+			}
 			*line = ft_strdup(data->content);
 			data->end = 1;
 			return (1);
