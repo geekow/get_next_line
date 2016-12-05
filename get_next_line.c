@@ -82,7 +82,7 @@ static int	parse(t_list **list, t_data *data, char **line)
 			return (-1);
 		else if (i == 0)
 		{
-			if (data->end)
+			if (data->end || data->content[0] == '\0')
 			{
 				ft_lstremovecontent(list, data->fd);
 				return (0);
