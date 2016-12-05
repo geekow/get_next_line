@@ -13,7 +13,7 @@
 #include "get_next_line.h"
 #include "libft.h"
 
-static void	ft_lstremovecontent(t_list **list, int fd)
+static int	ft_lstremovecontent(t_list **list, int fd)
 {
 	t_list	*current;
 	t_list	*previous;
@@ -33,11 +33,12 @@ static void	ft_lstremovecontent(t_list **list, int fd)
 			free(data->content);
 			free(data);
 			free(current);
-			return;
+			return (0);
 		}
 		previous = current;
 		current = current->next;
 	}
+	return (0);
 }
 
 static int	extend_content(t_data *data)
@@ -83,10 +84,7 @@ static int	parse(t_list **list, t_data *data, char **line)
 		else if (i == 0)
 		{
 			if (data->end || data->content[0] == '\0')
-			{
-				ft_lstremovecontent(list, data->fd);
-				return (0);
-			}
+				return (ft_lstremovecontent(list, data->fd));
 			*line = ft_strdup(data->content);
 			data->end = 1;
 			return (1);
