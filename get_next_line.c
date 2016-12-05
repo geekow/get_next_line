@@ -6,7 +6,7 @@
 /*   By: jjacobi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/24 19:35:13 by jjacobi           #+#    #+#             */
-/*   Updated: 2016/11/29 19:44:38 by jjacobi          ###   ########.fr       */
+/*   Updated: 2016/12/05 20:22:04 by jjacobi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,10 +48,9 @@ static int	extend_content(t_data *data)
 	char	*result;
 
 	i = 0;
-	str = ft_strnew(BUFF_SIZE + 1);
+	str = ft_strnew(BUFF_SIZE);
 	if ((i = read(data->fd, str, BUFF_SIZE)) == -1)
 		return (-1);
-	str[i] = '\0';
 	if (data->content)
 		result = ft_strjoin(data->content, str);
 	else
@@ -103,11 +102,11 @@ int			get_next_line(const int fd, char **line)
 	while (cache)
 	{
 		data = (t_data*)cache->content;
-		if (data->fd == fd)
+		if (data->fd == fd && line)
 			return (parse(&list, data, line));
 		cache = cache->next;
 	}
-	if (!(data = (t_data*)malloc(sizeof(t_data))))
+	if (!(data = (t_data*)malloc(sizeof(t_data))) || !line)
 		return (-1);
 	data->fd = fd;
 	data->content = NULL;
