@@ -58,7 +58,9 @@ static int	extend_content(t_data *data)
 	free(data->content);
 	free(str);
 	data->content = result;
-	if (!i && !ft_strchr(data->content, '\n'))
+	if (i == 0)
+		return (2);
+	else if (i < BUFF_SIZE && !ft_strchr(data->content, '\n'))
 		return (0);
 	else
 		return (1);
@@ -83,6 +85,10 @@ static int	parse(t_list **list, t_data *data, char **line)
 		else if (i == 0)
 		{
 			*line = ft_strdup(data->content);
+			return (1);
+		}
+		else if (i == 2)
+		{
 			ft_lstremovecontent(list, data->fd);
 			return (0);
 		}
