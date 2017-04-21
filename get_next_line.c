@@ -6,7 +6,7 @@
 /*   By: jjacobi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/24 19:35:13 by jjacobi           #+#    #+#             */
-/*   Updated: 2016/12/05 20:22:04 by jjacobi          ###   ########.fr       */
+/*   Updated: 2017/04/16 19:32:30 by jjacobi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ static int	extend_content(t_data *data)
 	free(data->content);
 	free(str);
 	data->content = result;
-	if (i < BUFF_SIZE && !ft_strchr(data->content, '\n'))
+	if (i == 0 && !ft_strchr(data->content, '\n'))
 		return (0);
 	else
 		return (1);
